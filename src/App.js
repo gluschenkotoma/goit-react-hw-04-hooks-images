@@ -34,14 +34,40 @@ export const App = () => {
   // }
   useEffect(() => {
     if (searchQuery !== '') {
-      fetchImages();
+      return;
     }
-  }, [searchQuery]);
+    const fetchImages = () => {
+      if (!searchQuery === '') return;
+      setIsLoading(true);
+      // this.setState({ isLoading: true });
+
+      getPictures(searchQuery, pageNumber)
+        .then(({ hits }) => {
+          setImages(images => [...images, ...hits]);
+          // setPageNumber(pageNumber => pageNumber + 1);
+          setTotal(hits.length);
+
+          // this.setState(prevState => ({images: [...prevState.images, ...hits],
+          //   pageNumber: prevState.pageNumber + 1,
+          //   total: hits.length,
+          // }));
+
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth',
+          });
+        })
+        .catch(error => setError(error.massage))
+        .finally(() => {
+          setIsLoading(false);
+          // this.setState({ isLoading: false });
+        });
+    };
+  }, [searchQuery, pageNumber]);
 
   const onChangeQuery = query => {
     setImages([]);
     setPageNumber(1);
-    // setPageNumber(pageNumber => pageNumber + 1);
     setSearchQuery(query.trim());
     setError(null);
     // this.setState({
@@ -51,35 +77,6 @@ export const App = () => {
     //   error: null,
     // });
   };
-
-  const fetchImages = () => {
-    if (!searchQuery) return;
-    setIsLoading(true);
-    // this.setState({ isLoading: true });
-
-    getPictures(searchQuery, pageNumber)
-      .then(({ hits }) => {
-        setImages(images => [...images, ...hits]);
-        setPageNumber(pageNumber => pageNumber + 1);
-        setTotal(hits.length);
-
-        // this.setState(prevState => ({images: [...prevState.images, ...hits],
-        //   pageNumber: prevState.pageNumber + 1,
-        //   total: hits.length,
-        // }));
-
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth',
-        });
-      })
-      .catch(error => setError(error.massage))
-      .finally(() => {
-        setIsLoading(false);
-        // this.setState({ isLoading: false });
-      });
-  };
-
   const toggleModal = () => {
     setLargeImage('');
     setShowModal(true);
