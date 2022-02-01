@@ -34,7 +34,7 @@ export const App = () => {
   // }
   useEffect(() => {
     if (searchQuery !== '') {
-      // fetchImages();
+      fetchImages();
     }
   }, [searchQuery]);
 
