@@ -43,6 +43,7 @@ export const App = () => {
 
       getPictures(searchQuery, pageNumber)
         .then(({ hits }) => {
+          console.log('hits', hits);
           setImages(images => [...images, ...hits]);
           // setPageNumber(pageNumber => pageNumber + 1);
           setTotal(hits.length);
@@ -68,7 +69,7 @@ export const App = () => {
   const onChangeQuery = query => {
     setImages([]);
     setPageNumber(1);
-    setSearchQuery(query.trim());
+    setSearchQuery(query);
     setError(null);
     // this.setState({
     //   images: [],
@@ -92,8 +93,8 @@ export const App = () => {
     setPageNumber(prev => prev + 1);
   };
   const showLoadMoreButton = images.length !== 0 && !isLoading && total > 0;
-
   console.log(showLoadMoreButton);
+
   return (
     <>
       <GlobalStyle />
