@@ -91,7 +91,9 @@ export const App = () => {
     setShowModal(true);
     // this.setState({ largeImage: largeImageURL, showModal: true });
   };
-
+  const handleLoadMore = () => {
+    setPageNumber(prev => prev + 1);
+  };
   const showLoadMoreButton = images.length !== 0 && !isLoading && total > 0;
 
   console.log(showLoadMoreButton);
@@ -105,7 +107,7 @@ export const App = () => {
 
         <ImageGallery images={images} onImageClick={openModal} />
 
-        {showLoadMoreButton && <Button onClick={fetchImages} />}
+        {showLoadMoreButton && <Button onClick={handleLoadMore} />}
 
         {isLoading && <Loader />}
 
