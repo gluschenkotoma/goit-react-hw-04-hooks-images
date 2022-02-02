@@ -3,16 +3,13 @@ export const SearchBar = ({ onSubmit }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleChange = e => {
-    setInputValue(e.target.value);
-    // this.setState({ inputValue: e.target.value });
+    setInputValue(e.currentTarget.value);
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     onSubmit(inputValue);
     setInputValue('');
-    // this.props.onSubmit(this.state.inputValue);
-    // this.setState({ inputValue: '' });
   };
 
   return (
@@ -23,12 +20,12 @@ export const SearchBar = ({ onSubmit }) => {
         </button>
 
         <input
+          onChange={handleChange}
           type="text"
-          autocomplete="off"
-          autofocus
+          autoComplete="off"
+          autoFocus
           placeholder="Search images and photos"
           value={inputValue}
-          onChange={handleChange}
         />
       </form>
     </header>

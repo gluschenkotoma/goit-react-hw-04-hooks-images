@@ -8,16 +8,6 @@ import { Modal } from 'Components/Modal/Modal';
 import { getPictures } from 'services/pickturesApi';
 
 export const App = () => {
-  // state = {
-  //   images: [],
-  //   pageNumber: 1,
-  //   searchQuery: '',
-  //   isLoading: false,
-  //   showModal: false,
-  //   largeImage: '',
-  //   error: null,
-  //   total: 0,
-  // };
   const [images, setImages] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,31 +17,18 @@ export const App = () => {
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (prevState.searchQuery !== this.state.searchQuery) {
-  //     this.fetchImages();
-  //   }
-  // }
   useEffect(() => {
-    if (searchQuery !== '') {
-      return;
+    if (!searchQuery) {
+      return; //если в searchQuery нет ничего запрос не отправлять
     }
     const fetchImages = () => {
-      if (!searchQuery === '') return;
-      setIsLoading(true);
-      // this.setState({ isLoading: true });
+      if (pageNumber === 1) setIsLoading(true);
 
       getPictures(searchQuery, pageNumber)
         .then(({ hits }) => {
           console.log('hits', hits);
-          setImages(images => [...images, ...hits]);
-          // setPageNumber(pageNumber => pageNumber + 1);
+          setImages(images => [...images, ...hits]); //при каждом новом клике распыляем предыдущее и настоящее в новый массив
           setTotal(hits.length);
-
-          // this.setState(prevState => ({images: [...prevState.images, ...hits],
-          //   pageNumber: prevState.pageNumber + 1,
-          //   total: hits.length,
-          // }));
 
           window.scrollTo({
             top: document.documentElement.scrollHeight,
@@ -61,36 +38,28 @@ export const App = () => {
         .catch(error => setError(error.massage))
         .finally(() => {
           setIsLoading(false);
-          // this.setState({ isLoading: false });
         });
     };
+    fetchImages();
   }, [searchQuery, pageNumber]);
 
   const onChangeQuery = query => {
-    setImages([]);
+    setSearchQuery(query.trim()); //обрезание пробелов
     setPageNumber(1);
-    setSearchQuery(query);
     setError(null);
-    // this.setState({
-    //   images: [],
-    //   pageNumber: 1,
-    //   searchQuery: query.trim(),
-    //   error: null,
-    // });
+    setImages([]);
   };
   const toggleModal = () => {
     setLargeImage('');
     setShowModal(true);
-    // this.setState({ largeImage: '', showModal: false });
   };
 
   const openModal = largeImageURL => {
     setLargeImage(largeImageURL);
     setShowModal(true);
-    // this.setState({ largeImage: largeImageURL, showModal: true });
   };
   const handleLoadMore = () => {
-    setPageNumber(prev => prev + 1);
+    setPageNumber(page => page + 1);
   };
   const showLoadMoreButton = images.length !== 0 && !isLoading && total > 0;
   console.log(showLoadMoreButton);
